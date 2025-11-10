@@ -1,0 +1,108 @@
+# readme.yaml
+name: Terraform AWS ACM Module
+description: |
+  A production-grade, reusable AWS ACM (Certificate Manager) module by OpsStation.
+  Designed for reliability, performance, and security — following AWS networking best practices.
+
+badges:
+  - image: https://img.shields.io/badge/Made%20by-OpsStation-blue?style=flat-square&logo=terraform
+    link: https://www.opsstation.com
+  - image: https://img.shields.io/badge/License-MIT-blue.svg
+    link: LICENSE
+  - image: https://img.shields.io/badge/Terraform-1.13%2B-purple.svg?logo=terraform
+    link: "#"
+  - image: https://github.com/OpsStation/terraform-aws-ec2/actions/workflows/ci.yml/badge.svg
+    link: https://github.com/OpsStation/terraform-aws-ec2/actions/workflows/ci.yml
+
+intro: |
+  🌩️ **A production-grade, reusable AWS ACM module by [OpsStation](https://www.opsstation.com)**
+  Designed for reliability, performance, and security — following AWS networking best practices.
+
+about_opsstation: |
+  **OpsStation** delivers **Cloud & DevOps excellence** for modern teams:
+  - 🚀 **Infrastructure Automation** with Terraform, Ansible & Kubernetes
+  - 💰 **Cost Optimization** via scaling & right-sizing
+  - 🛡️ **Security & Compliance** baked into CI/CD pipelines
+  - ⚙️ **Fully Managed Operations** across AWS, Azure, and GCP
+
+  💡 Need enterprise-grade DevOps automation?
+  👉 Visit [**www.opsstation.com**](https://www.opsstation.com) or email **hello@opsstation.com**
+
+features:
+  - Creates and manages **AWS ACM (SSL/TLS) certificates** for your domains.
+  - Supports both **public** and **private** certificate creation.
+  - Enables **automatic certificate renewal** with DNS or Email validation.
+  - Integrates seamlessly with **AWS ALB**, **CloudFront**, **API Gateway**, and **Elastic Beanstalk**.
+  - Automates **DNS validation** using **Route53**.
+  - Allows importing **existing certificates** (e.g., GoDaddy, DigiCert).
+  - Exposes **certificate validation status outputs**.
+  - Applies **standardized tagging and naming** via OpsStation’s Labels module.
+  - Fully compatible with other **OpsStation Terraform modules**.
+
+usage:
+  examples:
+    - title: Example — Generate Certificate (DNS)
+      code: |
+        module "acm" {
+          source                    = "git::https://github.com/opsstation/terraform-aws-acm.git?ref=v1.0.0"
+          name                      = "certificate"
+          environment               = "test"
+          domain_name               = "opsstation.com"
+          subject_alternative_names = ["*.${local.domain}", "www.${local.domain}"]
+        }
+
+    - title: Example — Generate Certificate (Email)
+      code: |
+        module "acm" {
+          source                    = "git::https://github.com/opsstation/terraform-aws-acm.git?ref=v1.0.0"
+          name                      = "certificate"
+          environment               = "test"
+          validate_certificate      = false
+          domain_name               = "opsstation.com"
+          subject_alternative_names = ["www.opsstation.com"]
+          validation_method         = "EMAIL"
+        }
+
+    - title: Example — Import Existing Certificate
+      code: |
+        module "acm" {
+          source             = "git::https://github.com/opsstation/terraform-aws-acm.git?ref=v1.0.0"
+          name               = "certificate"
+          environment        = "test"
+          import_certificate = true
+          private_key        = "./../../../opsstation-private-key.pem"
+          certificate_body   = "./../../../opsstation-cert.pem"
+          certificate_chain  = "./../../../opsstation-chain.crt"
+        }
+
+outputs:
+  title: 🔐 Outputs (AWS ACM Module)
+  table:
+    - name: certificate_arn
+      description: The ARN (Amazon Resource Name) of the created **ACM certificate**.
+    - name: domain_name
+      description: The **domain name** associated with the ACM certificate.
+    - name: status
+      description: The current **status** of the ACM certificate (e.g., ISSUED, PENDING_VALIDATION).
+    - name: validation_method
+      description: The **validation method** used for the certificate (e.g., DNS, EMAIL).
+    - name: subject_alternative_names
+      description: The list of **Subject Alternative Names (SANs)** included in the certificate.
+    - name: certificate_id
+      description: The unique **identifier** of the created ACM certificate.
+    - name: tags
+      description: A mapping of **tags** assigned to the ACM certificate resource.
+
+tag_rules:
+  title: ☁️ Tag Normalization Rules (AWS)
+  table:
+    - cloud: AWS
+      case: TitleCase
+      allowed_characters: Any
+      example: '`Name`, `Environment`, `CostCenter`'
+
+maintainer:
+  name: OpsStation
+  description: |
+    💙 Maintained by [OpsStation](https://www.opsstation.com)
+    OpsStation — Simplifying Cloud, Securing Scale.
