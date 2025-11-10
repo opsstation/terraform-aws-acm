@@ -1,10 +1,19 @@
+##----------------------------------------------------------------------------------
+## Labels module callled that will be used for naming and tags.
+##----------------------------------------------------------------------------------
 module "labels" {
-  source      = "git::git@github.com:opsstation/terraform-aws-labels.git?ref=v1.0.0"
+  source      = "opsstation/labels/multicloud"
+  version     = "1.0.0"
   name        = var.name
   environment = var.environment
-  managedby   = var.managedby
-  label_order = var.label_order
   repository  = var.repository
+  label_order = var.label_order
+  attributes  = ["v2"]
+
+  extra_tags = {
+    Owner      = "Sohan"
+    CostCenter = "Finance"
+  }
 }
 
 resource "aws_acm_certificate" "import-cert" {
@@ -52,6 +61,7 @@ resource "aws_acm_certificate" "cert" {
     create_before_destroy = true
   }
 }
+
 
 resource "aws_acm_certificate_validation" "cert" {
   count                   = var.enable && var.validate_certificate ? 1 : 0

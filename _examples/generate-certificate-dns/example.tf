@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  domain = ""
+  domain = "opsstation.com"
 }
 
 module "acm" {
